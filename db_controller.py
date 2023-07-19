@@ -1,7 +1,7 @@
 #Imports
 import sqlite3
 
-class db_controller():
+class DBController():
     """
     This class deals with requests to the database.
 
