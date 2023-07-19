@@ -12,18 +12,18 @@ class Book():
     __init__(title, rating,genre,desc,review) - This function will instantiate
                                                 a book object and fill it with
                                                 information.
-    toString() - This function will print the title, rating, genre, desc and review
+    to_string() - This function will print the title, rating, genre, desc and review
                  of the book to the console.
-    getTitle() - Returns the title of the book.
-    getRating() - Returns the rating of the book.
-    getGenre() - Returns the genre of the book.
-    getDesc() - Returns the description of the book.
-    getReview() - Returns the review of the book.
-    setTitle(title) - Sets the title of the book.
-    setRating(rating) - Sets the rating of the book.
-    setGenre(genre) - Sets the genre of the book.
-    setDesc(desc) - Sets the description of the book.
-    setReview(review) - Sets the review of the book.
+    get_title() - Returns the title of the book.
+    get_rating() - Returns the rating of the book.
+    get_genre() - Returns the genre of the book.
+    get_desc() - Returns the description of the book.
+    get_review() - Returns the review of the book.
+    set_title(title) - Sets the title of the book.
+    set_rating(rating) - Sets the rating of the book.
+    set_genre(genre) - Sets the genre of the book.
+    set_desc(desc) - Sets the description of the book.
+    set_review(review) - Sets the review of the book.
     """
     def __init__(self,title = None, rating = None,genre = None,desc = None,review = None):
         """
@@ -49,7 +49,7 @@ class Book():
         self.__review = review
 
 
-    def toString(self):
+    def to_string(self):
         """
         This is a method to print out the book parameters to console for testing purposes.
         """
@@ -60,42 +60,42 @@ class Book():
         print(f"Review: {self.__review}\n")
 
 
-    def getTitle(self):
+    def get_title(self):
         """
         Returns the title of the book.
         """
         return self.__title
 
 
-    def getRating(self):
+    def get_rating(self):
         """
         Returns the rating of the book.
         """
         return self.__rating
     
 
-    def getGenre(self):
+    def get_genre(self):
         """
         Returns the genre of the book.
         """
         return self.__genre
     
 
-    def getDesc(self):
+    def get_desc(self):
         """
         Returns the description of the book.
         """
         return self.__desc
     
 
-    def getReview(self):
+    def get_review(self):
         """
         Returns the review of the book.
         """
         return self.__review
     
 
-    def setTitle(self,title):
+    def set_title(self,title):
         """
         Sets the title of the book to the given text.
 
@@ -107,7 +107,7 @@ class Book():
         self.__title = title
          
 
-    def setRating(self,rating):
+    def set_rating(self,rating):
         """
         Sets the rating of the book to the given integer.
 
@@ -119,7 +119,7 @@ class Book():
         self.__rating = rating
          
 
-    def setGenre(self,genre):
+    def set_genre(self,genre):
         """
         Sets the genre of the book to the given text.
 
@@ -131,7 +131,7 @@ class Book():
         self.__genre = genre
          
 
-    def setDesc(self,desc):
+    def set_desc(self,desc):
         """
         Sets the description of the book to the given text.
 
@@ -143,7 +143,7 @@ class Book():
         self.__desc = desc
          
 
-    def setReview(self,review):
+    def set_review(self,review):
         """
         Sets the review of the book to the given text.
 
@@ -155,25 +155,25 @@ class Book():
         self.__review = review
 
     
-def testHarness():
+def test_harness():
     """
     This is a test harness to test the functionality of the Book class. 
     """
     book1 = Book()
     book2 = Book("HP","7","Fantasy","Wizards beat bloke with no nose","Good")
-    #book1.toString()
-    #book2.toString()
-    #book2.setRating(9)
-    #book2.toString()
+    #book1.to_string()
+    #book2.to_string()
+    #book2.set_rating(9)
+    #book2.to_string()
 
     book2.__title = "THIS WILL NOT WORK"
-    book2.toString()
-    book2.setTitle("USING CORRECT METHOD")
-    print(book2.getTitle())
-    book2.toString()
+    book2.to_string()
+    book2.set_title("USING CORRECT METHOD")
+    print(book2.get_title())
+    book2.to_string()
 
 if __name__ == "__main__":
-    testHarness()
+    test_harness()
 
 
     
