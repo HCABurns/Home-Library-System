@@ -2,6 +2,8 @@
 from tkinter import *
 from db_controller import DBController
 from PIL import ImageTk, Image
+import time
+
 
 class UI():
     """
@@ -28,24 +30,33 @@ class UI():
         self.width = 800
         self.height =600
         self.root.geometry("{}x{}".format(self.width, self.height))
+
         #Change icon and title of the window.
         self.root.title("Home Library System")
         self.root.iconbitmap("images\icon.ico")
 
-        #Add background image
-        bg = PhotoImage(file="images/bg.png")
-        self.canvas = Canvas(self.root, width = self.width,height = self.height)
-        self.canvas.pack(fill = "both", expand = True)
-        self.canvas.create_image(0,0, image=bg, anchor = "nw")
-
+        #Set the background image
+        self.set_background()
+         
         #Add logo to the page
         image1 = PhotoImage(file="images/logo2sm.png")
         self.canvas.create_image(self.width/2,150, image=image1)
 
         #Set the home page.
         self.home_page()
+
         #Run the mainloop.
         self.root.mainloop()
+
+
+    def set_background(self):
+        """
+        This function will add the background picture to the screen.
+        """
+        self.bg = PhotoImage(file="images/bg.png")
+        self.canvas = Canvas(self.root, width = self.width,height = self.height)
+        self.canvas.pack(fill = "both", expand = True)
+        self.canvas.create_image(0,0, image=self.bg, anchor = "nw")
 
 
     def home_page(self):
@@ -98,6 +109,10 @@ class UI():
         #Remove previous content
         self.clear_window()
 
+        #Set the background again.
+        self.set_background()
+
+
         #Add Label and input for title
 
         #Add Label and input for rating
@@ -107,8 +122,6 @@ class UI():
         #Add Label and input for description
 
         #Add Label and input for review
-        pass
-
 
     def delete_page(self):
         """
