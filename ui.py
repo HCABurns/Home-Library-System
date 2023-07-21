@@ -172,8 +172,26 @@ class UI():
         #Remove previous content
         self.clear_window()
 
-        #Add Label and input for title
+        #Set the background again.
+        self.set_background()
 
+        #Add Label and input for title.
+        title_frame = Frame(self.canvas)
+        title_frame.pack()
+        title_label = Label(title_frame,text = "Title:")
+        title_label.grid(row = 0, column = 0)
+        title_entry = Entry(title_frame)
+        title_entry.grid(row = 0, column = 1)
+
+        #Button to delete a new book
+        button_frame = Frame(self.canvas)
+        button_frame.pack()
+        image = Image.open("images/delete_book_button.png")
+        delete_button = ImageTk.PhotoImage(image)
+        label = Label(image=delete_button)
+        label.image=delete_button
+        button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.delete_book(title_entry.get()), borderwidth=0)
+        button.pack(pady=(0, 15))
         pass
 
 
@@ -232,6 +250,12 @@ class UI():
             new_book(title,rating,genre,desc,review)
             
 
+    def delete_book(self,title):
+        if title != "":
+            from main import delete_book
+            delete_book(title)
+        
+    
     def clear_window(self):
         """
         This function will destroy everything in the window and leave it empty..
