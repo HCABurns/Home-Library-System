@@ -15,7 +15,7 @@ class DBController():
 
     def __init__(self):
         #Create a connection to the database.
-        self.con = sqlite3.conn('books.db', check_same_thread=False)
+        self.con = sqlite3.connect('books.db', check_same_thread=False)
         self.cur = self.con.cursor()
 
 
