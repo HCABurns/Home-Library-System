@@ -39,13 +39,6 @@ class UI():
         self.root.title("Home Library System")
         self.root.iconbitmap("images\icon.ico")
 
-        #Set the background image
-        self.set_background()
-         
-        #Add logo to the page
-        image1 = PhotoImage(file="images/logo2sm.png")
-        self.canvas.create_image(self.width/2,150, image=image1)
-
         #Set the home page.
         self.home_page()
 
@@ -67,9 +60,17 @@ class UI():
         """
         This function will add the relevant buttons for the home page.
         """
+        #Remove previous content
+        self.clear_window()
+        
         #Create a frame for the buttons to be placed
         button_frame = Frame(self.canvas,background="")
         button_frame.pack(pady=(270,0))
+
+        #Add logo to the page
+        image = PhotoImage(file="images\logo2sm.png")
+        self.root.image = image #Prevents garbage collection
+        self.canvas.create_image(self.width/2,150, image=image)
 
         #Button to add a new book
         image2 = Image.open("images/add_book_button.png")
@@ -110,9 +111,6 @@ class UI():
         """
         #Remove previous content
         self.clear_window()
-
-        #Set the background again.
-        self.set_background()
 
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
@@ -175,9 +173,6 @@ class UI():
         """
         #Remove previous content
         self.clear_window()
-
-        #Set the background again.
-        self.set_background()
 
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
@@ -336,6 +331,23 @@ class UI():
         """
         from main import update_book
         update_book(book_id,title,rating,genre,desc,review)
+
+        #Remove previous content
+        self.clear_window()
+
+        #Updated label
+        updated_label = Label(self.canvas,text = "Update Successful!")
+        updated_label.pack()
+
+        #Return Button
+        button_frame = Frame(self.canvas)
+        button_frame.pack()
+        image = Image.open("images/return_button.png")
+        return_button = ImageTk.PhotoImage(image)
+        label = Label(image=return_button)
+        label.image=return_button
+        button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
+        button.pack(pady=(0, 15))
 
         
     def check_title(self,title):
