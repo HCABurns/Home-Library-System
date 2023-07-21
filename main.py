@@ -9,6 +9,13 @@ def new_book(title,rating,genre,desc,review):
     db.close()
 
 
+def delete_book(title):
+    db = DBController()
+    command = f"DELETE FROM books WHERE title = '{title}';"
+    db.execute(command)
+    db.commit()
+    db.close()
+
 if __name__ == "__main__":
     ui = UI()
     new_book("HP",5,"Fantasy","Wizards","This is good book.")
