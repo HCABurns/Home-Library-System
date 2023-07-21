@@ -99,8 +99,6 @@ class UI():
         button = Button(button_frame,image=delete_button,bd = 0, command = self.delete_page, borderwidth=0)
         button.pack(pady=(0, 15))
 
-        
-        
 
     def add_page(self):
         """
@@ -112,16 +110,60 @@ class UI():
         #Set the background again.
         self.set_background()
 
+        #Add Label and input for title.
+        title_frame = Frame(self.canvas)
+        title_frame.pack()
+        title_label = Label(title_frame,text = "Title:")
+        title_label.grid(row = 0, column = 0)
+        title_entry = Entry(title_frame)
+        title_entry.grid(row = 0, column = 1)
 
-        #Add Label and input for title
+        #Add Label and input for rating.
+        rating_frame = Frame(self.canvas)
+        rating_frame.pack()
+        rating_label = Label(rating_frame,text = "Rating:")
+        rating_label.grid(row = 0, column = 0)
+        rating_entry = Entry(rating_frame)
+        rating_entry.grid(row = 0, column = 1)
 
-        #Add Label and input for rating
+        #Add Label and input for genre.
+        genre_frame = Frame(self.canvas)
+        genre_frame.pack()
+        genre_label = Label(genre_frame,text = "Genre:")
+        genre_label.grid(row = 0, column = 0)
+        genre_entry = Entry(genre_frame)
+        genre_entry.grid(row = 0, column = 1)
 
-        #Add Label and input for genre
+        #Add Label and input for description.
+        desc_frame = Frame(self.canvas)
+        desc_frame.pack()
+        desc_label = Label(desc_frame,text = "Description:")
+        desc_label.grid(row = 0, column = 0)
+        desc_entry = Entry(desc_frame)
+        desc_entry.grid(row = 0, column = 1)
 
-        #Add Label and input for description
+        #Add Label and input for review.
+        review_frame = Frame(self.canvas)
+        review_frame.pack()
+        review_label = Label(review_frame,text = "Review:")
+        review_label.grid(row = 0, column = 0)
+        review_entry = Entry(review_frame)
+        review_entry.grid(row = 0, column = 1)
 
-        #Add Label and input for review
+        #Button to add a new book
+        button_frame = Frame(self.canvas)
+        button_frame.pack()
+        image2 = Image.open("images/add_book_button.png")
+        add_button = ImageTk.PhotoImage(image2)
+        label = Label(image=add_button)
+        label.image=add_button
+        button = Button(button_frame,image=add_button,bd = 0, borderwidth=0, command = lambda :self.check_all_details(title_entry.get(),
+                                                                                                       rating_entry.get(),
+                                                                                                       genre_entry.get(),
+                                                                                                       desc_entry.get(),
+                                                                                                       review_entry.get()))
+        button.pack(pady=(0, 15))
+        
 
     def delete_page(self):
         """
@@ -160,6 +202,35 @@ class UI():
         
         pass
 
+
+    def check_all_details(self,title,rating,genre,desc,review):
+        print(title)
+        print(rating)
+        print(genre)
+        print(desc)
+        print(review)
+        valid = True
+        #Ensure that they're not empty
+        if title == "":
+            valid = False
+            pass
+        if rating == "" or rating.isnumeric() == False:
+            valid = False
+            pass
+        if genre == "":
+            valid = False
+            pass
+        if desc == "":
+            valid = False
+            pass
+        if review == "":
+            valid = False
+            pass
+        #If all is valid, then add the book to the database.
+        if valid:
+            from main import new_book
+            new_book(title,rating,genre,desc,review)
+            
 
     def clear_window(self):
         """
