@@ -12,16 +12,24 @@ class UI():
     Methods
     --------------
     __init__() - Creates a window with correct geometry, title and logo.
+    set_background() - Adds an image to the canvas as a background image.
     home_page() - Sets the UI for the home page.
     add_page() - Sets the UI for the adding a book page.
+    add_confirmation_page() - Sets the UI for confirmation the book has been added to the database.
+    delete_page() - Sets the UI for the delete a book page.
+    delete_book(title) - Sends the title of the book to be removed from the database.
+    delete_book_confirmation() - Adds UI to confirm a book has been deleted from the database.
     view_page() - Sets the UI for the view books page.
     edit_page_search() - Sets the UI for the search for a book to be editted.
     edit_page(book_id) - Sets the UI to allow a book to be editted.
+    edit_page_confirmation(book_id,title,rating,genre,desc,review) - Sends information to be used to
+                                                                     update the books information and
+                                                                     displays a confirmation page.
     check_title(title) - Checks if a title is in the database or not.
     check_all_details(self,title,rating,genre,desc,review) - Checks if all the relevant information
                                                              has been entered for adding a book.
-    delete_page() - Sets the UI for the delete a book page.
-
+    
+    add_return_button() - This adds a return button and update label to the window.
     clear_window() - Removes all widgets that are currently on the page.
     """
 
@@ -167,6 +175,17 @@ class UI():
         button.pack(pady=(0, 15))
         
 
+    def add_confirmation_page(self):
+        """
+        This function will add the return button after a book has been added to the database.
+        """
+        #Remove previous content
+        self.clear_window()
+
+        #Add the return button and updated label.
+        self.add_return_button()
+
+
     def delete_page(self):
         """
         This function will set the screen to be able to delete a book that is in the collection.
@@ -191,8 +210,33 @@ class UI():
         label.image=delete_button
         button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.delete_book(title_entry.get()), borderwidth=0)
         button.pack(pady=(0, 15))
-        pass
 
+
+    def delete_book(self,title):
+        """
+        This will remove a book from the collection.
+
+        Parameters
+        ------------------
+        title : str
+            This is the title of the book to be deleted from the collection.
+        """
+        if title != "":
+            from main import delete_book
+            deleted = delete_book(title)
+            if deleted:
+                self.delete_book_confirmation()
+
+
+    def delete_book_confirmation(self):
+        """
+        This function will confirm when a book has been deleted.
+        """
+        #Remove previous content
+        self.clear_window()
+
+        #Add the return button and updated label.
+        self.add_return_button()
 
     def view_page(self):
         """
@@ -301,7 +345,7 @@ class UI():
         edit_button = ImageTk.PhotoImage(image)
         label = Label(image=edit_button)
         label.image=edit_button
-        button = Button(button_frame,image=edit_button,bd = 0, command = lambda : self.edit_page_update(book_id,
+        button = Button(button_frame,image=edit_button,bd = 0, command = lambda : self.edit_page_confirmation(book_id,
                                                                                                        title_entry.get(),
                                                                                                        rating_entry.get(),
                                                                                                        genre_entry.get(),
@@ -310,7 +354,7 @@ class UI():
         button.pack(pady=(0, 15))
 
 
-    def edit_page_update(self,book_id,title,rating,genre,desc,review):
+    def edit_page_confirmation(self,book_id,title,rating,genre,desc,review):
         """
         This function will edit a book that is in the databse
 
@@ -335,19 +379,8 @@ class UI():
         #Remove previous content
         self.clear_window()
 
-        #Updated label
-        updated_label = Label(self.canvas,text = "Update Successful!")
-        updated_label.pack()
-
-        #Return Button
-        button_frame = Frame(self.canvas)
-        button_frame.pack()
-        image = Image.open("images/return_button.png")
-        return_button = ImageTk.PhotoImage(image)
-        label = Label(image=return_button)
-        label.image=return_button
-        button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
-        button.pack(pady=(0, 15))
+        #Add the return button and updated label.
+        self.add_return_button()
 
         
     def check_title(self,title):
@@ -395,38 +428,41 @@ class UI():
         #Ensure that they're not empty
         if title == "":
             valid = False
-            pass
         if rating == "" or rating.isnumeric() == False:
             valid = False
-            pass
+            print("wad")
+            print(rating.isnumeric())
         if genre == "":
             valid = False
-            pass
         if desc == "":
             valid = False
-            pass
         if review == "":
             valid = False
-            pass
         #If all is valid, then add the book to the database.
         if valid:
             from main import new_book
             new_book(title,rating,genre,desc,review)
-            
+            self.add_confirmation_page()
 
-    def delete_book(self,title):
-        """
-        This will remove a book from the collection.
 
-        Parameters
-        ------------------
-        title : str
-            This is the title of the book to be deleted from the collection.
+    def add_return_button(self):
         """
-        if title != "":
-            from main import delete_book
-            delete_book(title)
-        
+        This function will add the return button for the confirmation pages.
+        """
+        #Updated label
+        updated_label = Label(self.canvas,text = "Update Successful!")
+        updated_label.pack()
+
+        #Return Button
+        button_frame = Frame(self.canvas)
+        button_frame.pack()
+        image = Image.open("images/return_button.png")
+        return_button = ImageTk.PhotoImage(image)
+        label = Label(image=return_button)
+        label.image=return_button
+        button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
+        button.pack(pady=(0, 15))
+    
     
     def clear_window(self):
         """

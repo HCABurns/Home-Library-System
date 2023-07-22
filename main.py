@@ -16,20 +16,38 @@ def new_book(title,rating,genre,desc,review):
 def delete_book(title):
     """
     This function will remove a book of a provided title from the database.
+
+    Parameters
+    ----------------
+    title : str
+        This is the title of the book to be deleted.
+
+    Return
+    -----------------
+    boolean - True if removed and false if it has not been.
     """
-    db = DBController()
-    command = f"DELETE FROM books WHERE title = '{title}';"
-    db.execute(command)
-    db.commit()
-    db.close()
+    #If the book is in the database, then delete it. Otherwise return False.
+    if book_id_retrieval(title) != None:
+        db = DBController()
+        command = f"DELETE FROM books WHERE title = '{title}';"
+        executed = db.execute(command)
+        db.commit()
+        db.close()
+        return True
+    return False
 
 
 def book_id_retrieval(title):
     """
     This function will retrieve the ID of a book of a provided title.
 
+    Parameters
+    ----------------
+    title : str
+        This is the title of the book to be retrieve the id of.
+
     Return
-    -------------
+    ---------------
     int - Integer of the books id or None if not in the database.
     """
     db = DBController()
@@ -58,6 +76,24 @@ def book_retriever(book_id):
         return Book(info[1],info[2],info[3],info[4],info[5])
     db.close()
     return None
+
+
+def is_book_present(title):
+    """
+    This function will take a book title and return a book object containing all the relevant information.
+
+    Return
+    ----------------
+    Book - Book object with all the information in the database about that book. 
+    """
+    db = DBController()
+    command = f"SELECT * FROM books WHERE title = {title};"
+    book = db.execute(command)
+    for info in book:
+        db.close()
+        return True
+    db.close()
+    return False
 
 
 def update_book(book_id,title,rating,genre,desc,review):
