@@ -196,17 +196,17 @@ class UI():
         #Add Label and input for description.
         desc_frame = Frame(self.canvas, bg = "#4487b8")
         desc_frame.pack(pady=(0,20))
-        desc_label = Label(desc_frame,text = "Description:  ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        desc_label = Label(desc_frame,text = "Description:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         desc_label.grid(row = 0, column = 0)
-        desc_entry = Text(desc_frame, width = 66, height = 3)
+        desc_entry = Text(desc_frame, width = 68, height = 3)
         desc_entry.grid(row = 0, column = 1)
 
         #Add Label and input for review.
         review_frame = Frame(self.canvas, bg = "#4487b8")
         review_frame.pack()
-        review_label = Label(review_frame,text = "Review:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        review_label = Label(review_frame,text = "Review:      ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         review_label.grid(row = 0, column = 0)
-        review_entry = Text(review_frame, width = 72, height = 10)
+        review_entry = Text(review_frame, width = 68, height = 10)
         review_entry.grid(row = 0, column = 1)
 
         #Button to add a new book
@@ -233,7 +233,6 @@ class UI():
                                                                                                        review_entry.get()))
         button.pack(pady=(0, 15))
         """
-
         self.add_return_button()
         
 
@@ -245,6 +244,8 @@ class UI():
         self.clear_window()
 
         #Add the return button and updated label.
+        l = Label(self.canvas,text="Book has been successfully added!", font=("Helvetica", "16", "bold"),bg="#4487b8",fg="white")
+        l.place(x=self.width/2-160,y=self.height/2)
         self.add_return_button()
 
 
@@ -262,13 +263,19 @@ class UI():
 
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
-        title_frame.pack()
-        title_label = Label(title_frame,text = "Title:")
+        title_frame.pack(pady=(self.height/2-40,0))
+        title_label = Label(title_frame,text = "Title: ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         title_label.grid(row = 0, column = 0)
-        title_entry = Entry(title_frame)
+        title_entry = Entry(title_frame, width = 100)
         title_entry.grid(row = 0, column = 1)
 
         #Button to delete a new book
+        image = PhotoImage(file="images/delete_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,self.height/2+30, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", lambda e: self.delete_book(e,title_entry.get()))
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image = Image.open("images/delete_book_button.png")
@@ -277,17 +284,20 @@ class UI():
         label.image=delete_button
         button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.delete_book(title_entry.get()), borderwidth=0)
         button.pack(pady=(0, 15))
-
+        """
+        
         #Add the return button
         self.add_return_button()
 
 
-    def delete_book(self,title):
+    def delete_book(self,e,title):
         """
         This will remove a book from the collection.
 
         Parameters
         ------------------
+        e : Event
+            Event that occurs when a button is pressed.
         title : str
             This is the title of the book to be deleted from the collection.
         """
@@ -306,8 +316,8 @@ class UI():
         self.clear_window()
 
         #Updated label
-        updated_label = Label(self.canvas,text = "Update Successful!")
-        updated_label.pack()
+        l = Label(self.canvas,text="Book has been successfully deleted!", font=("Helvetica", "16", "bold"),bg="#4487b8",fg="white")
+        l.place(x=self.width/2-160,y=self.height/2)
         
         #Add the return button
         self.add_return_button()
@@ -328,21 +338,7 @@ class UI():
         from main import get_all_books
         books = get_all_books()
         
-        #Add books in a scrollable frame
-        """
-        #scrollbar = Scrollbar(self.canvas)
-        #scrollbar.pack( side = RIGHT, fill = Y )
-        
-        mylist = Listbox(self.canvas, yscrollcommand = scrollbar.set )
-        for book in books:
-           mylist.insert(END, f"{book.get_title()}... {book.get_rating()}/10\n")
-
-        mylist.pack(fill = BOTH )
-        scrollbar.config( command = mylist.yview )
-        """
-
-        #main_frame = self.canvas
-        
+        #Add books in a scrollable frame     
         display_frame = Canvas(self.canvas,width = self.width-100, height=self.height-150)
         display_frame.pack(side=LEFT, expand=1,anchor="n",pady=(30,0))
 
@@ -359,7 +355,7 @@ class UI():
 
         for i in range(len(books)):
             frame = Frame(book_frame)
-            l = Label(frame,wraplength=self.width,text = f"Title: {books[i].get_title()}\nRating: {books[i].get_rating()/10}\nGenre: {books[i].get_genre()}\nDescription: {books[i].get_desc()}\nReview: {books[i].get_review()}\n\n", anchor = "w",justify="left").grid(row=i,column=0)
+            l = Label(frame,wraplength=self.width,text = f"Title: {books[i].get_title()}\nRating: {books[i].get_rating()}/10\nGenre: {books[i].get_genre()}\nDescription: {books[i].get_desc()}\nReview: {books[i].get_review()}\n\n", anchor = "w",justify="left").grid(row=i,column=0)
             frame.grid(sticky="W",row = i, column=0)
 
         #Add return button
@@ -394,14 +390,20 @@ class UI():
         self.clear_window()
 
         #Search bar for the book name
-        search_frame = Frame(self.canvas)
-        search_frame.pack()
-        search_label = Label(search_frame,text = "Title:")
-        search_label.grid(row = 0, column = 0)
-        search_entry = Entry(search_frame)
+        title_frame = Frame(self.canvas)
+        title_frame.pack(pady=(self.height/2-40,0))
+        title_label = Label(title_frame,text = "Title: ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        title_label.grid(row = 0, column = 0)
+        search_entry = Entry(title_frame, width = 100)
         search_entry.grid(row = 0, column = 1)
 
         #Search button
+        image = PhotoImage(file="images/search_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,self.height/2+30, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", lambda e: self.check_title(e,search_entry.get()))
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image = Image.open("images/search_button.png")
@@ -410,6 +412,7 @@ class UI():
         label.image=delete_button
         button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.check_title(search_entry.get()), borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
         #Add return button
         self.add_return_button()
@@ -430,7 +433,53 @@ class UI():
         print("Book id: ",book_id)
         book = book_retriever(book_id)
         book.to_string()
+
+        #Add Label and input for title.
+        title_frame = Frame(self.canvas)
+        title_frame.pack(pady=(40,20))
+        title_label = Label(title_frame,text = "Title: ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        title_label.grid(row = 0, column = 0)
+        title_entry = Entry(title_frame, width = 100)
+        title_entry.insert(0, book.get_title())
+        title_entry.grid(row = 0, column = 1)
+
+        #Add Label and input for rating.
+        rating_frame = Frame(self.canvas)
+        rating_frame.pack(pady=(0,20))
+        rating_label = Label(rating_frame,text = "Rating:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        rating_label.grid(row = 0, column = 0)
+        rating_entry = Entry(rating_frame,width = 97)
+        rating_entry.insert(0, book.get_rating())
+        rating_entry.grid(row = 0, column = 1)
+
+        #Add Label and input for genre.
+        genre_frame = Frame(self.canvas)
+        genre_frame.pack(pady=(0,20))
+        genre_label = Label(genre_frame,text = "Genre:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        genre_label.grid(row = 0, column = 0)
+        genre_entry = Entry(genre_frame, width = 98)
+        genre_entry.insert(0, book.get_genre())
+        genre_entry.grid(row = 0, column = 1)
+
+        #Add Label and input for description.
+        desc_frame = Frame(self.canvas, bg = "#4487b8")
+        desc_frame.pack(pady=(0,20))
+        desc_label = Label(desc_frame,text = "Description:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        desc_label.grid(row = 0, column = 0)
+        desc_entry = Text(desc_frame, width = 68, height = 3)
+        desc_entry.insert(END, book.get_desc())
+        desc_entry.grid(row = 0, column = 1)
+
+        #Add Label and input for review.
+        review_frame = Frame(self.canvas, bg = "#4487b8")
+        review_frame.pack()
+        review_label = Label(review_frame,text = "Review:      ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
+        review_label.grid(row = 0, column = 0)
+        review_entry = Text(review_frame, width = 68, height = 10)
+        review_entry.insert(END, book.get_review())
+        review_entry.grid(row = 0, column = 1)
         
+        """
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
         title_frame.pack()
@@ -474,9 +523,21 @@ class UI():
         review_label.grid(row = 0, column = 0)
         review_entry = Entry(review_frame)
         review_entry.insert(0, book.get_review())
-        review_entry.grid(row = 0, column = 1)
+        review_entry.grid(row = 0, column = 1)"""
 
         #Button to edit a book.
+        image = PhotoImage(file="images/edit_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,self.height-120, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", lambda e: self.edit_page_confirmation(e,
+                                                                                       book_id,
+                                                                                      title_entry.get(),
+                                                                                      rating_entry.get(),
+                                                                                      genre_entry.get(),
+                                                                                      desc_entry.get('1.0',END),
+                                                                                      review_entry.get('1.0',END)))
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image = Image.open("images/edit_book_button.png")
@@ -490,14 +551,16 @@ class UI():
                                                                                                        desc_entry.get(),
                                                                                                        review_entry.get()))
         button.pack(pady=(0, 15))
+        """
 
-
-    def edit_page_confirmation(self,book_id,title,rating,genre,desc,review):
+    def edit_page_confirmation(self,e,book_id,title,rating,genre,desc,review):
         """
         This function will edit a book that is in the databse
 
         Parameters
         -----------------
+        e : Event
+            This is an event that occurs when a button is pressed.
         book_id : int
             This is the book id to be updated.
         title : str
@@ -518,19 +581,21 @@ class UI():
         self.clear_window()
 
         #Updated label
-        updated_label = Label(self.canvas,text = "Update Successful!")
-        updated_label.pack()
+        l = Label(self.canvas,text="Book has been successfully editted!", font=("Helvetica", "16", "bold"),bg="#4487b8",fg="white")
+        l.place(x=self.width/2-160,y=self.height/2)
         
         #Add the return button and updated label.
         self.add_return_button()
 
         
-    def check_title(self,title):
+    def check_title(self,e,title):
         """
         This function will check if a book with a title is in the database.
 
         Parameters
         ----------------
+        e : Event
+            This is an event that occurs when a button is pressed.
         title : str
             This is title of the book that is being checked.
         """
