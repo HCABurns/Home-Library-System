@@ -97,12 +97,47 @@ def is_book_present(title):
 
 
 def update_book(book_id,title,rating,genre,desc,review):
+    """
+    This function will update a record in the database.
+
+    Parameters
+    -----------------
+    book_id : int
+        This is the book id to be updated.
+    title : str
+        This is the title of the book.
+    rating : int
+        This is a value regarding the rating of the book.
+    genre : str
+        This is the genre of the book.
+    desc : str
+        This is a brief description of the book.
+    review : str
+        This is a review of the book.
+    """
     db = DBController()
     command = f"UPDATE books SET title='{title}', rating='{rating}', genre='{genre}', desc='{desc}' , review='{review}' WHERE id = {book_id};"
-    print(command)
     db.execute(command)
     db.commit()
     db.close()
+
+
+def get_all_books():
+    """
+    This function will return an array of book objects for every book in the databse.
+
+    Return
+    ---------------
+    Array - Array of Book objects for every book in the database.
+    """
+    db = DBController()
+    command = "SELECT * FROM books"
+    executed = db.execute(command)
+    books = []
+    for info in executed:
+        books.append(Book(info[1],info[2],info[3],info[4],info[5]))
+    return books
+
     
 if __name__ == "__main__":
     ui = UI()
