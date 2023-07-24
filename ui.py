@@ -51,7 +51,7 @@ class UI():
         self.root.iconbitmap("images\icon.ico")
 
         #Set the home page.
-        self.home_page()
+        self.home_page(None)
 
         #Run the mainloop.
         self.root.mainloop()
@@ -67,13 +67,22 @@ class UI():
         self.canvas.create_image(0,0, image=self.bg, anchor = "nw")
 
 
-    def home_page(self):
+    def home_page(self,e):
         """
         This function will add the relevant buttons for the home page.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
 
+        #Unbind the scroll
+        self.canvas.unbind_all("<MouseWheel>")
+    
+        #Define button location.
         button_location = 300
         
         #Create a frame for the buttons to be placed
@@ -323,8 +332,8 @@ class UI():
 
         #main_frame = self.canvas
         
-        display_frame = Canvas(self.canvas)
-        display_frame.pack(side=LEFT, fill=BOTH, expand=1)
+        display_frame = Canvas(self.canvas,width = self.width-100, height=self.height-150)
+        display_frame.pack(side=LEFT, expand=1,anchor="n",pady=(30,0))
 
         scrollbar = ttk.Scrollbar(self.canvas,orient=VERTICAL,command=display_frame.yview)
         scrollbar.pack(side=RIGHT,fill=Y)
@@ -335,6 +344,7 @@ class UI():
         book_frame = Frame(display_frame)
         display_frame.create_window((0,0), window=book_frame ,anchor="nw")
 
+        self.canvas.bind_all("<MouseWheel>", lambda e: self._on_mousewheel(e,display_frame))
 
         for i in range(len(books)):
             frame = Frame(book_frame)
@@ -342,6 +352,9 @@ class UI():
             frame.grid(sticky="W",row = i, column=0)
 
         #Add return button
+        self.add_return_button()
+
+        """
         button_frame = Frame(book_frame)
         button_frame.grid(row=len(books),column = 0)
         image = Image.open("images/return_button.png")
@@ -350,6 +363,11 @@ class UI():
         label.image=return_button
         button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
         button.pack(pady=(0, 15))
+        """
+
+    def _on_mousewheel(self,event, book_frame):
+        book_frame.yview_scroll(int(-1*(event.delta/120)), "units")
+
         
                 
     def edit_page_search(self,e):
@@ -563,6 +581,13 @@ class UI():
         This function will add the return button for the confirmation pages.
         """
         #Return Button
+        image = PhotoImage(file="images/return_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        return_button = self.canvas.create_image(self.width/2,self.height-50, image=image)
+        self.canvas.tag_bind(return_button, "<Button-1>", self.home_page)
+
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image = Image.open("images/return_button.png")
@@ -571,7 +596,7 @@ class UI():
         label.image=return_button
         button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
         button.pack(pady=(0, 15))
-    
+        """
     
     def clear_window(self):
         """
