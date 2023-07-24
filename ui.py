@@ -3,7 +3,7 @@ from tkinter import *
 from db_controller import DBController
 from PIL import ImageTk, Image
 import time
-
+from tkinter import ttk
 
 class UI():
     """
@@ -173,6 +173,8 @@ class UI():
                                                                                                        desc_entry.get(),
                                                                                                        review_entry.get()))
         button.pack(pady=(0, 15))
+
+        self.add_return_button()
         
 
     def add_confirmation_page(self):
@@ -211,6 +213,9 @@ class UI():
         button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.delete_book(title_entry.get()), borderwidth=0)
         button.pack(pady=(0, 15))
 
+        #Add the return button
+        self.add_return_button()
+
 
     def delete_book(self,title):
         """
@@ -235,7 +240,11 @@ class UI():
         #Remove previous content
         self.clear_window()
 
-        #Add the return button and updated label.
+        #Updated label
+        updated_label = Label(self.canvas,text = "Update Successful!")
+        updated_label.pack()
+        
+        #Add the return button
         self.add_return_button()
 
     def view_page(self):
@@ -245,11 +254,54 @@ class UI():
         #Remove previous content
         self.clear_window()
 
-        #Add books in a scrollable frame
+        #Get all books
+        from main import get_all_books
+        books = get_all_books()
         
-        pass
+        #Add books in a scrollable frame
+        """
+        #scrollbar = Scrollbar(self.canvas)
+        #scrollbar.pack( side = RIGHT, fill = Y )
+        
+        mylist = Listbox(self.canvas, yscrollcommand = scrollbar.set )
+        for book in books:
+           mylist.insert(END, f"{book.get_title()}... {book.get_rating()}/10\n")
+
+        mylist.pack(fill = BOTH )
+        scrollbar.config( command = mylist.yview )
+        """
+
+        #main_frame = self.canvas
+        
+        display_frame = Canvas(self.canvas)
+        display_frame.pack(side=LEFT, fill=BOTH, expand=1)
+
+        scrollbar = ttk.Scrollbar(self.canvas,orient=VERTICAL,command=display_frame.yview)
+        scrollbar.pack(side=RIGHT,fill=Y)
+
+        display_frame.configure(yscrollcommand = scrollbar.set)
+        display_frame.bind('<Configure>',lambda e: display_frame.configure(scrollregion=display_frame.bbox("all")))
+
+        book_frame = Frame(display_frame)
+        display_frame.create_window((0,0), window=book_frame ,anchor="nw")
 
 
+        for i in range(len(books)):
+            frame = Frame(book_frame)
+            l = Label(frame,wraplength=self.width,text = f"Title: {books[i].get_title()}\nRating: {books[i].get_rating()/10}\nGenre: {books[i].get_genre()}\nDescription: {books[i].get_desc()}\nReview: {books[i].get_review()}\n\n", anchor = "w",justify="left").grid(row=i,column=0)
+            frame.grid(sticky="W",row = i, column=0)
+
+        #Add return button
+        button_frame = Frame(book_frame)
+        button_frame.grid(row=len(books),column = 0)
+        image = Image.open("images/return_button.png")
+        return_button = ImageTk.PhotoImage(image)
+        label = Label(image=return_button)
+        label.image=return_button
+        button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
+        button.pack(pady=(0, 15))
+        
+                
     def edit_page_search(self):
         """
         This function will set the screen to be able to search for a book that is in the collection to be editted.
@@ -275,6 +327,8 @@ class UI():
         button = Button(button_frame,image=delete_button,bd = 0, command = lambda : self.check_title(search_entry.get()), borderwidth=0)
         button.pack(pady=(0, 15))
 
+        #Add return button
+        self.add_return_button()
 
     def edit_page(self,book_id):
         """
@@ -379,6 +433,10 @@ class UI():
         #Remove previous content
         self.clear_window()
 
+        #Updated label
+        updated_label = Label(self.canvas,text = "Update Successful!")
+        updated_label.pack()
+        
         #Add the return button and updated label.
         self.add_return_button()
 
@@ -449,10 +507,6 @@ class UI():
         """
         This function will add the return button for the confirmation pages.
         """
-        #Updated label
-        updated_label = Label(self.canvas,text = "Update Successful!")
-        updated_label.pack()
-
         #Return Button
         button_frame = Frame(self.canvas)
         button_frame.pack()
