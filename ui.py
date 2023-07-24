@@ -43,12 +43,15 @@ class UI():
         self.height =600
         self.root.geometry("{}x{}".format(self.width, self.height))
 
+        #Set transparent if lime background colour
+        self.root.wm_attributes('-transparentcolor', 'lime')
+
         #Change icon and title of the window.
         self.root.title("Home Library System")
         self.root.iconbitmap("images\icon.ico")
 
         #Set the home page.
-        self.home_page()
+        self.home_page(None)
 
         #Run the mainloop.
         self.root.mainloop()
@@ -64,12 +67,23 @@ class UI():
         self.canvas.create_image(0,0, image=self.bg, anchor = "nw")
 
 
-    def home_page(self):
+    def home_page(self,e):
         """
         This function will add the relevant buttons for the home page.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
+
+        #Unbind the scroll
+        self.canvas.unbind_all("<MouseWheel>")
+    
+        #Define button location.
+        button_location = 300
         
         #Create a frame for the buttons to be placed
         button_frame = Frame(self.canvas,background="")
@@ -81,86 +95,131 @@ class UI():
         self.canvas.create_image(self.width/2,150, image=image)
 
         #Button to add a new book
-        image2 = Image.open("images/add_book_button.png")
+        image = PhotoImage(file="images/add_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.add_page)
+        """image2 = Image.open("images/add_book_button.png")
         add_button = ImageTk.PhotoImage(image2)
-        label = Label(image=add_button)
+        label = Label(image=add_button, bg = "lime")
         label.image=add_button
-        button = Button(button_frame,image=add_button,bd = 0, command = self.add_page, borderwidth=0)
-        button.pack(pady=(0, 15))
+        button = Button(button_frame,image=add_button,bd = 0, command = self.add_page, borderwidth=0)#, bg = "lime")
+        button.pack(pady=(0, 15))"""
 
+        
         #Button to view all books
+        button_location += 84
+        image = PhotoImage(file="images/view_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.view_page)
+        """
         image = Image.open("images/view_book_button.png")
         view_button = ImageTk.PhotoImage(image)
         label = Label(image=view_button)
         label.image=view_button
         button = Button(button_frame,image=view_button,bd = 0, command = self.view_page, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
         #Button to edit a book.
+        button_location += 84
+        image = PhotoImage(file="images/edit_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.edit_page_search)
+        """
         image = Image.open("images/edit_book_button.png")
         edit_button = ImageTk.PhotoImage(image)
         label = Label(image=edit_button)
         label.image=edit_button
         button = Button(button_frame,image=edit_button,bd = 0, command = self.edit_page_search, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
         #Button to delete a new book
+        button_location += 84
+        image = PhotoImage(file="images/delete_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.delete_page)
+        """
         image2 = Image.open("images/delete_book_button.png")
         delete_button = ImageTk.PhotoImage(image2)
         label = Label(image=delete_button)
         label.image=delete_button
         button = Button(button_frame,image=delete_button,bd = 0, command = self.delete_page, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
 
-    def add_page(self):
+    def add_page(self,e):
         """
         This function will set the screen to be able to input data and add a new book to the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
 
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
-        title_frame.pack()
-        title_label = Label(title_frame,text = "Title:")
+        title_frame.pack(pady=(40,20))
+        title_label = Label(title_frame,text = "Title: ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         title_label.grid(row = 0, column = 0)
-        title_entry = Entry(title_frame)
+        title_entry = Entry(title_frame, width = 100)
         title_entry.grid(row = 0, column = 1)
 
         #Add Label and input for rating.
         rating_frame = Frame(self.canvas)
-        rating_frame.pack()
-        rating_label = Label(rating_frame,text = "Rating:")
+        rating_frame.pack(pady=(0,20))
+        rating_label = Label(rating_frame,text = "Rating:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         rating_label.grid(row = 0, column = 0)
-        rating_entry = Entry(rating_frame)
+        rating_entry = Entry(rating_frame,width = 97)
         rating_entry.grid(row = 0, column = 1)
 
         #Add Label and input for genre.
         genre_frame = Frame(self.canvas)
-        genre_frame.pack()
-        genre_label = Label(genre_frame,text = "Genre:")
+        genre_frame.pack(pady=(0,20))
+        genre_label = Label(genre_frame,text = "Genre:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         genre_label.grid(row = 0, column = 0)
-        genre_entry = Entry(genre_frame)
+        genre_entry = Entry(genre_frame, width = 98)
         genre_entry.grid(row = 0, column = 1)
 
         #Add Label and input for description.
-        desc_frame = Frame(self.canvas)
-        desc_frame.pack()
-        desc_label = Label(desc_frame,text = "Description:")
+        desc_frame = Frame(self.canvas, bg = "#4487b8")
+        desc_frame.pack(pady=(0,20))
+        desc_label = Label(desc_frame,text = "Description:  ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         desc_label.grid(row = 0, column = 0)
-        desc_entry = Entry(desc_frame)
+        desc_entry = Text(desc_frame, width = 66, height = 3)
         desc_entry.grid(row = 0, column = 1)
 
         #Add Label and input for review.
-        review_frame = Frame(self.canvas)
+        review_frame = Frame(self.canvas, bg = "#4487b8")
         review_frame.pack()
-        review_label = Label(review_frame,text = "Review:")
+        review_label = Label(review_frame,text = "Review:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         review_label.grid(row = 0, column = 0)
-        review_entry = Entry(review_frame)
+        review_entry = Text(review_frame, width = 72, height = 10)
         review_entry.grid(row = 0, column = 1)
 
         #Button to add a new book
+        image = PhotoImage(file="images/add_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,self.height-120, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", lambda e:self.check_all_details(e, title_entry.get(),
+                                                                                           rating_entry.get(),
+                                                                                           genre_entry.get(),
+                                                                                           desc_entry.get(1.0,END),
+                                                                                           review_entry.get(1.0,END)))
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image2 = Image.open("images/add_book_button.png")
@@ -173,6 +232,7 @@ class UI():
                                                                                                        desc_entry.get(),
                                                                                                        review_entry.get()))
         button.pack(pady=(0, 15))
+        """
 
         self.add_return_button()
         
@@ -188,9 +248,14 @@ class UI():
         self.add_return_button()
 
 
-    def delete_page(self):
+    def delete_page(self,e):
         """
         This function will set the screen to be able to delete a book that is in the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -247,9 +312,14 @@ class UI():
         #Add the return button
         self.add_return_button()
 
-    def view_page(self):
+    def view_page(self, e):
         """
         This function will set the screen to be able to view the books that are in the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -273,8 +343,8 @@ class UI():
 
         #main_frame = self.canvas
         
-        display_frame = Canvas(self.canvas)
-        display_frame.pack(side=LEFT, fill=BOTH, expand=1)
+        display_frame = Canvas(self.canvas,width = self.width-100, height=self.height-150)
+        display_frame.pack(side=LEFT, expand=1,anchor="n",pady=(30,0))
 
         scrollbar = ttk.Scrollbar(self.canvas,orient=VERTICAL,command=display_frame.yview)
         scrollbar.pack(side=RIGHT,fill=Y)
@@ -285,6 +355,7 @@ class UI():
         book_frame = Frame(display_frame)
         display_frame.create_window((0,0), window=book_frame ,anchor="nw")
 
+        self.canvas.bind_all("<MouseWheel>", lambda e: self._on_mousewheel(e,display_frame))
 
         for i in range(len(books)):
             frame = Frame(book_frame)
@@ -292,6 +363,9 @@ class UI():
             frame.grid(sticky="W",row = i, column=0)
 
         #Add return button
+        self.add_return_button()
+
+        """
         button_frame = Frame(book_frame)
         button_frame.grid(row=len(books),column = 0)
         image = Image.open("images/return_button.png")
@@ -300,11 +374,21 @@ class UI():
         label.image=return_button
         button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
         button.pack(pady=(0, 15))
+        """
+
+    def _on_mousewheel(self,event, book_frame):
+        book_frame.yview_scroll(int(-1*(event.delta/120)), "units")
+
         
                 
-    def edit_page_search(self):
+    def edit_page_search(self,e):
         """
         This function will set the screen to be able to search for a book that is in the collection to be editted.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -460,7 +544,7 @@ class UI():
             print("NO BOOK FOUND WITH TITLE")
 
 
-    def check_all_details(self,title,rating,genre,desc,review):
+    def check_all_details(self,event,title,rating,genre,desc,review):
         """
         This function checks that all the information is present when adding a book.
 
@@ -508,6 +592,13 @@ class UI():
         This function will add the return button for the confirmation pages.
         """
         #Return Button
+        image = PhotoImage(file="images/return_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        return_button = self.canvas.create_image(self.width/2,self.height-50, image=image)
+        self.canvas.tag_bind(return_button, "<Button-1>", self.home_page)
+
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image = Image.open("images/return_button.png")
@@ -516,7 +607,7 @@ class UI():
         label.image=return_button
         button = Button(button_frame,image=return_button,bd = 0, command = self.home_page)
         button.pack(pady=(0, 15))
-    
+        """
     
     def clear_window(self):
         """
