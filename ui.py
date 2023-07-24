@@ -43,6 +43,9 @@ class UI():
         self.height =600
         self.root.geometry("{}x{}".format(self.width, self.height))
 
+        #Set transparent if lime background colour
+        self.root.wm_attributes('-transparentcolor', 'lime')
+
         #Change icon and title of the window.
         self.root.title("Home Library System")
         self.root.iconbitmap("images\icon.ico")
@@ -70,6 +73,8 @@ class UI():
         """
         #Remove previous content
         self.clear_window()
+
+        button_location = 300
         
         #Create a frame for the buttons to be placed
         button_frame = Frame(self.canvas,background="")
@@ -81,41 +86,76 @@ class UI():
         self.canvas.create_image(self.width/2,150, image=image)
 
         #Button to add a new book
-        image2 = Image.open("images/add_book_button.png")
+        image = PhotoImage(file="images/add_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.add_page)
+        """image2 = Image.open("images/add_book_button.png")
         add_button = ImageTk.PhotoImage(image2)
-        label = Label(image=add_button)
+        label = Label(image=add_button, bg = "lime")
         label.image=add_button
-        button = Button(button_frame,image=add_button,bd = 0, command = self.add_page, borderwidth=0)
-        button.pack(pady=(0, 15))
+        button = Button(button_frame,image=add_button,bd = 0, command = self.add_page, borderwidth=0)#, bg = "lime")
+        button.pack(pady=(0, 15))"""
 
+        
         #Button to view all books
+        button_location += 84
+        image = PhotoImage(file="images/view_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.view_page)
+        """
         image = Image.open("images/view_book_button.png")
         view_button = ImageTk.PhotoImage(image)
         label = Label(image=view_button)
         label.image=view_button
         button = Button(button_frame,image=view_button,bd = 0, command = self.view_page, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
         #Button to edit a book.
+        button_location += 84
+        image = PhotoImage(file="images/edit_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.edit_page_search)
+        """
         image = Image.open("images/edit_book_button.png")
         edit_button = ImageTk.PhotoImage(image)
         label = Label(image=edit_button)
         label.image=edit_button
         button = Button(button_frame,image=edit_button,bd = 0, command = self.edit_page_search, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
         #Button to delete a new book
+        button_location += 84
+        image = PhotoImage(file="images/delete_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,button_location, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", self.delete_page)
+        """
         image2 = Image.open("images/delete_book_button.png")
         delete_button = ImageTk.PhotoImage(image2)
         label = Label(image=delete_button)
         label.image=delete_button
         button = Button(button_frame,image=delete_button,bd = 0, command = self.delete_page, borderwidth=0)
         button.pack(pady=(0, 15))
+        """
 
 
-    def add_page(self):
+    def add_page(self,e):
         """
         This function will set the screen to be able to input data and add a new book to the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -188,9 +228,14 @@ class UI():
         self.add_return_button()
 
 
-    def delete_page(self):
+    def delete_page(self,e):
         """
         This function will set the screen to be able to delete a book that is in the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -247,9 +292,14 @@ class UI():
         #Add the return button
         self.add_return_button()
 
-    def view_page(self):
+    def view_page(self, e):
         """
         This function will set the screen to be able to view the books that are in the collection.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
@@ -302,9 +352,14 @@ class UI():
         button.pack(pady=(0, 15))
         
                 
-    def edit_page_search(self):
+    def edit_page_search(self,e):
         """
         This function will set the screen to be able to search for a book that is in the collection to be editted.
+
+        Parameters
+        ----------------
+        e : Event
+            This is the event object from clikcing a button.
         """
         #Remove previous content
         self.clear_window()
