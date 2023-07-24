@@ -171,45 +171,55 @@ class UI():
 
         #Add Label and input for title.
         title_frame = Frame(self.canvas)
-        title_frame.pack()
-        title_label = Label(title_frame,text = "Title:")
+        title_frame.pack(pady=(40,20))
+        title_label = Label(title_frame,text = "Title: ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         title_label.grid(row = 0, column = 0)
-        title_entry = Entry(title_frame)
+        title_entry = Entry(title_frame, width = 100)
         title_entry.grid(row = 0, column = 1)
 
         #Add Label and input for rating.
         rating_frame = Frame(self.canvas)
-        rating_frame.pack()
-        rating_label = Label(rating_frame,text = "Rating:")
+        rating_frame.pack(pady=(0,20))
+        rating_label = Label(rating_frame,text = "Rating:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         rating_label.grid(row = 0, column = 0)
-        rating_entry = Entry(rating_frame)
+        rating_entry = Entry(rating_frame,width = 97)
         rating_entry.grid(row = 0, column = 1)
 
         #Add Label and input for genre.
         genre_frame = Frame(self.canvas)
-        genre_frame.pack()
-        genre_label = Label(genre_frame,text = "Genre:")
+        genre_frame.pack(pady=(0,20))
+        genre_label = Label(genre_frame,text = "Genre:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         genre_label.grid(row = 0, column = 0)
-        genre_entry = Entry(genre_frame)
+        genre_entry = Entry(genre_frame, width = 98)
         genre_entry.grid(row = 0, column = 1)
 
         #Add Label and input for description.
-        desc_frame = Frame(self.canvas)
-        desc_frame.pack()
-        desc_label = Label(desc_frame,text = "Description:")
+        desc_frame = Frame(self.canvas, bg = "#4487b8")
+        desc_frame.pack(pady=(0,20))
+        desc_label = Label(desc_frame,text = "Description:  ", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         desc_label.grid(row = 0, column = 0)
-        desc_entry = Entry(desc_frame)
+        desc_entry = Text(desc_frame, width = 66, height = 3)
         desc_entry.grid(row = 0, column = 1)
 
         #Add Label and input for review.
-        review_frame = Frame(self.canvas)
+        review_frame = Frame(self.canvas, bg = "#4487b8")
         review_frame.pack()
-        review_label = Label(review_frame,text = "Review:")
+        review_label = Label(review_frame,text = "Review:", font=("Helvetica", "16"), bg = "#4487b8",fg="white")
         review_label.grid(row = 0, column = 0)
-        review_entry = Entry(review_frame)
+        review_entry = Text(review_frame, width = 72, height = 10)
         review_entry.grid(row = 0, column = 1)
 
         #Button to add a new book
+        image = PhotoImage(file="images/add_book_button.png")
+        label = Label(image=image) #Prevents garbage collection
+        label.image=image #Prevents garbage collection
+        add_b = self.canvas.create_image(self.width/2,self.height-120, image=image)
+        self.canvas.tag_bind(add_b, "<Button-1>", lambda e:self.check_all_details(e, title_entry.get(),
+                                                                                           rating_entry.get(),
+                                                                                           genre_entry.get(),
+                                                                                           desc_entry.get(1.0,END),
+                                                                                           review_entry.get(1.0,END)))
+        """
         button_frame = Frame(self.canvas)
         button_frame.pack()
         image2 = Image.open("images/add_book_button.png")
@@ -222,6 +232,7 @@ class UI():
                                                                                                        desc_entry.get(),
                                                                                                        review_entry.get()))
         button.pack(pady=(0, 15))
+        """
 
         self.add_return_button()
         
@@ -533,7 +544,7 @@ class UI():
             print("NO BOOK FOUND WITH TITLE")
 
 
-    def check_all_details(self,title,rating,genre,desc,review):
+    def check_all_details(self,event,title,rating,genre,desc,review):
         """
         This function checks that all the information is present when adding a book.
 
